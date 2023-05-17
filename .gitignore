@@ -1,2 +1,3 @@
 .DS_Store
-*/datasets
+*/iNaturalist
+**/__pycache__

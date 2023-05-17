@@ -7,6 +7,7 @@ from torch.utils.data.dataloader import DataLoader
 import torchvision.transforms as transforms
 from torchvision import models
 from model import BasicBlock, ResNet18
+import matplotlib.pyplot as plt
 
 # 到数据集的路径
 img_dir_train='./iNaturalist/train'
@@ -33,6 +34,8 @@ class NatureDataset(Dataset):
         self.data = []
         self.anno = []
         for i, cls in enumerate(self.class_list):
+            if cls == '.DS_Store':
+                continue
             img_names = os.listdir(os.path.join(self.img_dir, cls))
             for img_name in img_names:
                 self.data.append(os.path.join(self.img_dir, cls, img_name))
@@ -64,7 +67,7 @@ val_dataset = NatureDataset(img_dir_val, if_train=False)
 val_loader = DataLoader(val_dataset, batch_size=batch_size, shuffle=False)
 
 # 如果使用编写的ResNet18
-# model = ResNet18(BasicBlock, num_classes=train_dataset.num_classes)
+#model = ResNet18(BasicBlock, num_classes=train_dataset.num_classes)
 
 # 如果使用预训练的ResNet18
 model = models.resnet18(pretrained=True)
@@ -76,6 +79,8 @@ model = model.to(device)
 criterion = torch.nn.CrossEntropyLoss().to(device)
 optimizer = torch.optim.Adam(model.parameters(), lr=lr)
 
+loss_list = []
+acc_list = []
 # 训练和验证
 for epoch in range(epochs):
     model.train()
@@ -101,9 +106,18 @@ for epoch in range(epochs):
             total_num += img.size(0)
 
     acc = total_correct / total_num
+    loss_list.append(loss.item())
+    acc_list.append(acc)
     print(epoch+1, 'test acc:', acc)
 
+plt.plot(range(epochs), loss_list)
+plt.xlabel("epoch")
+plt.ylabel("loss")
+plt.title("loss")
+plt.show()
 
-
-        
-        
+plt.plot(range(epochs), acc_list)
+plt.xlabel("epoch")
+plt.ylabel("acc")
+plt.title("acc")
+plt.show()

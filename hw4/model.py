@@ -10,9 +10,11 @@ class BasicBlock(nn.Module):
         # layer：3*3卷积->BatchNorm2d->ReLU->3*3卷积->BatchNorm2d
         self.layer = nn.Sequential(
             # Your code here
-
-
-
+            nn.Conv2d(in_channels,out_channels,kernel_size=1,stride=stride,bias=False),
+            nn.BatchNorm2d(out_channels),
+            nn.ReLU(inplace=True),
+            nn.Conv2d(out_channels,out_channels,kernel_size=3,stride=1,padding=padding,bias=False),
+            nn.BatchNorm2d(out_channels),
         )
 
         # 输入输出通道相等时，shortcut不需要任何操作
@@ -21,7 +23,9 @@ class BasicBlock(nn.Module):
         if stride != 1 or in_channels != out_channels:
             self.shortcut = nn.Sequential(
                 # Your code here
-
+                nn.Conv2d(in_channels,out_channels,kernel_size=1,stride=stride,bias=False),
+                nn.BatchNorm2d(out_channels),
+                
 
 
             )
