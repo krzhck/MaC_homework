@@ -56,7 +56,11 @@ class NatureDataset(Dataset):
 # 可设置的参数
 device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 epochs = 30
-lr = 5e-4
+
+#lr = 5e-4 # 1
+#lr = 5e-3 # 2
+lr = 0.1 # 3
+
 batch_size = 64
 
 # 加载数据集
